@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CycleCare - Period Tracker & Wellness Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #FFF9FA;
+      color: #1E293B;
+      padding: 24px 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #FFE4E6;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      font-size: 34px;
+    }
+
+    .brand h1 {
+      font-size: 26px;
+      color: #0F172A;
+      font-weight: 800;
+    }
+
+    .brand p {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #E11D48;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-today {
+      background: #E11D48;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.2);
+    }
+
+    .btn-today:hover {
+      background: #BE123C;
+      transform: translateY(-1px);
+    }
+
+    /* Layout */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid #FFE4E6;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(225, 29, 72, 0.04);
+    }
+
+    /* Status Wheel Card */
+    .status-card {
+      text-align: center;
+    }
+
+    .badge {
+      background: #F3E8FF;
+      color: #7E22CE;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .wheel {
+      margin: 18px auto;
+      border-radius: 50%;
+      border: 9px solid #FFE4E6;
+      border-top-color: #E11D48;
+      width: 175px;
+      height: 175px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .day-num {
+      font-size: 46px;
+      font-weight: 800;
+      color: #E11D48;
+      line-height: 1;
+    }
+
+    .wheel p {
+      font-size: 11px;
+      color: #64748B;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .countdown {
+      font-size: 13px;
+      color: #0F172A;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .stat-box {
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-box span {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .stat-box strong {
+      font-size: 13px;
+    }
+
+    .stat-box.pink { background: #FFF1F2; color: #BE123C; }
+    .stat-box.teal { background: #CCFBF1; color: #0F766E; }
+    .stat-box.purple { background: #F3E8FF; color: #7E22CE; }
+    .stat-box.yellow { background: #FEF3C7; color: #B45309; }
+
+    /* Form Card */
+    .form-card h3 {
+      font-size: 15px;
+      margin-bottom: 14px;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-card label {
+      font-size: 12px;
+      color: #64748B;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-card input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid #CBD5E1;
+      margin-bottom: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-card input:focus {
+      border-color: #E11D48;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-update {
+      width: 100%;
+      background: #E11D48;
+      color: white;
+      border: none;
+      padding: 11px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-update:hover {
+      background: #BE123C;
+    }
+
+    /* Calendar Card */
+    .calendar-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .cal-header h2 {
+      font-size: 20px;
+      color: #0F172A;
+    }
+
+    .cal-arrows button {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 6px;
+      font-weight: bold;
+      color: #334155;
+      transition: all 0.2s;
+    }
+
+    .cal-arrows button:hover {
+      background: #F1F5F9;
+      color: #E11D48;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .weekday {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748B;
+      padding: 8px 0;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid #F1F5F9;
+      font-weight: 600;
+      font-size: 14px;
+      background: white;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .cal-day:hover:not(.empty) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .cal-day.empty {
+      border: none;
+      background: transparent;
+      cursor: default;
+    }
+
+    .cal-day.today {
+      outline: 2px solid #E11D48;
+      outline-offset: 1px;
+    }
+
+    .cal-day.selected {
+      box-shadow: 0 0 0 2px #7E22CE;
+    }
+
+    .cal-day.period { background: #FFE4E6; color: #BE123C; font-weight: 700; }
+    .cal-day.predicted { background: #FFF1F2; border: 1.5px dashed #F43F5E; color: #BE123C; }
+    .cal-day.fertile { background: #CCFBF1; color: #0F766E; }
+    .cal-day.ovulation { background: #99F6E4; color: #115E59; font-weight: 800; }
+
+    .cal-day-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #9333EA;
+      position: absolute;
+      bottom: 4px;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #F1F5F9;
+      font-size: 12px;
+      color: #64748B;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .dot.period { background: #FFE4E6; border: 1px solid #BE123C; }
+    .dot.predicted { background: #FFF1F2; border: 1px dashed #F43F5E; }
+    .dot.fertile { background: #CCFBF1; }
+    .dot.ovulation { background: #99F6E4; }
+    .dot.has-log { background: #9333EA; border-radius: 50%; width: 8px; height: 8px; }
+
+    /* =========================================
+       NEW FEATURE 1: Phase Health Insights
+       ========================================= */
+    .insights-card {
+      margin-bottom: 24px;
+    }
+
+    .insights-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .insights-header h3 {
+      font-size: 18px;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .current-phase-pill {
+      background: linear-gradient(135deg, #FFE4E6, #F3E8FF);
+      color: #9F1239;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid #FECDD3;
+    }
+
+    .phase-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .phase-tab-btn {
+      padding: 10px 8px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .phase-tab-btn:hover {
+      background: #F1F5F9;
+      color: #0F172A;
+    }
+
+    .phase-tab-btn.active {
+      background: #E11D48;
+      border-color: #E11D48;
+      color: white;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.2);
+    }
+
+    .phase-content-banner {
+      background: #FFF1F2;
+      border-left: 4px solid #E11D48;
+      padding: 12px 16px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #9F1239;
+    }
+
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .insight-box {
+      background: #FAFAFA;
+      border: 1px solid #F1F5F9;
+      border-radius: 14px;
+      padding: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .insight-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+    }
+
+    .insight-box h4 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #1E293B;
+    }
+
+    .insight-box p {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .insight-box ul {
+      padding-left: 18px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .insight-box ul li {
+      margin-bottom: 4px;
+    }
+
+    /* =========================================
+       NEW FEATURE 2: Daily Symptom & Mood Logger
+       ========================================= */
+    .logger-card {
+      margin-bottom: 24px;
+    }
+
+    .logger-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #FFE4E6;
+    }
+
+    .logger-header h3 {
+      font-size: 18px;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .log-date-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #64748B;
+    }
+
+    .log-date-picker input {
+      padding: 6px 12px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .logger-section {
+      margin-bottom: 20px;
+    }
+
+    .logger-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Flow pills */
+    .flow-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .flow-pill {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .flow-pill:hover {
+      background: #F1F5F9;
+    }
+
+    .flow-pill.active {
+      background: #FFE4E6;
+      border-color: #E11D48;
+      color: #BE123C;
+      font-weight: 700;
+    }
+
+    /* Mood and Symptoms chips */
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 7px 14px;
+      border-radius: 18px;
+      border: 1px solid #E2E8F0;
+      background: #FAFAFA;
+      color: #475569;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+
+    .chip:hover {
+      background: #F1F5F9;
+    }
+
+    .chip.active {
+      background: #F3E8FF;
+      border-color: #9333EA;
+      color: #7E22CE;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(147, 51, 234, 0.15);
+    }
+
+    .chip.active.symptom {
+      background: #FFE4E6;
+      border-color: #E11D48;
+      color: #BE123C;
+      box-shadow: 0 2px 6px rgba(225, 29, 72, 0.15);
+    }
+
+    /* Water Tracker */
+    .water-tracker-container {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .water-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .water-icon {
+      font-size: 32px;
+    }
+
+    .water-text h4 {
+      font-size: 15px;
+      color: #1E3A8A;
+    }
+
+    .water-text p {
+      font-size: 12px;
+      color: #3B82F6;
+    }
+
+    .water-cups {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cup-btn {
+      background: white;
+      border: 1.5px solid #93C5FD;
+      color: #93C5FD;
+      font-size: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cup-btn.filled {
+      background: #3B82F6;
+      border-color: #2563EB;
+      color: white;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .water-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-water-adj {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid #BFDBFE;
+      background: white;
+      color: #1E40AF;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-water-adj:hover {
+      background: #DBEAFE;
+    }
+
+    /* Notes */
+    .notes-input {
+      width: 100%;
+      min-height: 70px;
+      padding: 10px 14px;
+      border: 1px solid #CBD5E1;
+      border-radius: 10px;
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+    }
+
+    .notes-input:focus {
+      border-color: #E11D48;
+    }
+
+    .logger-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid #F1F5F9;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-save-log {
+      background: #E11D48;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .btn-save-log:hover {
+      background: #BE123C;
+    }
+
+    .btn-clear-log {
+      background: transparent;
+      color: #64748B;
+      border: 1px solid #CBD5E1;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-clear-log:hover {
+      background: #F8FAFC;
+      color: #0F172A;
+    }
+
+    .toast-msg {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #059669;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 860px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .phase-nav { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <span class="logo">🌸</span>
+        <div>
+          <h1>CycleCare</h1>
+          <p>Personal Period Tracker & Wellness</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btnToday" class="btn-today">💧 Period Started Today</button>
+      </div>
+    </header>
+
+    <!-- Main Cycle Predictions & Calendar -->
+    <div class="main-layout">
+      <!-- Left Panel: Status & Form -->
+      <div class="left-panel">
+        <div class="card status-card">
+          <span id="cycleBadge" class="badge">Cycle Day 1</span>
+          <div class="wheel">
+            <span id="cycleDay" class="day-num">1</span>
+            <p>Cycle Day</p>
+            <h3 id="countdown" class="countdown">Calculating...</h3>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box pink">
+              <span>Next Period</span>
+              <strong id="nextPeriod">-</strong>
+            </div>
+            <div class="stat-box teal">
+              <span>Ovulation Day</span>
+              <strong id="ovulation">-</strong>
+            </div>
+            <div class="stat-box purple">
+              <span>Fertile Window</span>
+              <strong id="fertileWindow">-</strong>
+            </div>
+            <div class="stat-box yellow">
+              <span>Cycle Length</span>
+              <strong id="cycleLenText">28 Days</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card form-card">
+          <h3>⚙️ Adjust Cycle Details</h3>
+          <form id="cycleForm">
+            <label>Last Period Start Date</label>
+            <input type="date" id="inputStart" required>
+
+            <div class="row">
+              <div>
+                <label>Cycle Length (Days)</label>
+                <input type="number" id="inputCycle" value="28" min="20" max="45">
+              </div>
+              <div>
+                <label>Period Duration (Days)</label>
+                <input type="number" id="inputPeriod" value="5" min="2" max="10">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-update">Update Predictions</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Panel: Calendar -->
+      <div class="card calendar-card">
+        <div class="cal-header">
+          <h2 id="monthTitle">November 2026</h2>
+          <div class="cal-arrows">
+            <button id="btnPrev">&lt;</button>
+            <button id="btnNext">&gt;</button>
+          </div>
+        </div>
+
+        <div class="cal-grid" id="calendarGrid"></div>
+
+        <div class="legend">
+          <div><span class="dot period"></span> Period</div>
+          <div><span class="dot predicted"></span> Next Period</div>
+          <div><span class="dot fertile"></span> Fertile Days</div>
+          <div><span class="dot ovulation"></span> Ovulation Day</div>
+          <div><span class="dot has-log"></span> Logged Symptoms</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 1: Phase-Based Health & Wellness Insights -->
+    <div class="card insights-card">
+      <div class="insights-header">
+        <h3>🌿 Cycle Phase Wellness & Hormonal Insights</h3>
+        <span id="currentPhaseTag" class="current-phase-pill">Current: Menstrual Phase</span>
+      </div>
+
+      <!-- Phase Selector Tabs -->
+      <div class="phase-nav">
+        <button class="phase-tab-btn active" data-phase="menstrual">🩸 Menstrual Phase</button>
+        <button class="phase-tab-btn" data-phase="follicular">🌱 Follicular Phase</button>
+        <button class="phase-tab-btn" data-phase="ovulation">✨ Ovulatory Phase</button>
+        <button class="phase-tab-btn" data-phase="luteal">🌙 Luteal Phase</button>
+      </div>
+
+      <!-- Active Phase Banner -->
+      <div id="phaseBanner" class="phase-content-banner">
+        <strong>Menstrual Phase (Days 1–5):</strong> Estrogen and progesterone are at their lowest levels. Your body is shedding the uterine lining and asks for gentle restoration and rest.
+      </div>
+
+      <!-- 4 Pillars of Insights -->
+      <div class="insights-grid" id="phaseDetailsGrid">
+        <div class="insight-box">
+          <h4>🥗 Nutrition & Cravings</h4>
+          <p id="insightNutrition">Eat warm, iron-rich meals like lentils, leafy greens, bone broths, and dark chocolate. Drink ginger or chamomile tea to soothe uterine cramps.</p>
+        </div>
+        <div class="insight-box">
+          <h4>🏃‍♀️ Movement & Exercise</h4>
+          <p id="insightMovement">Prioritize slow restorative yoga, gentle stretching, and mindful strolls. Give your body permission to rest without guilt.</p>
+        </div>
+        <div class="insight-box">
+          <h4>💆‍♀️ Self-Care & Mood</h4>
+          <p id="insightSelfcare">Keep your lower abdomen warm with a heating pad, sleep 8+ hours, and create space for introspection and cozy quiet time.</p>
+        </div>
+        <div class="insight-box">
+          <h4>🧬 Hormones & Energy</h4>
+          <p id="insightHormone">Lowest hormone levels mean lower physical energy but heightened intuition and emotional clarity. Honor your natural rhythms.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 2: Daily Symptom, Mood & Water Tracker -->
+    <div class="card logger-card">
+      <div class="logger-header">
+        <h3>📝 Daily Symptoms, Mood & Hydration Log</h3>
+        <div class="log-date-picker">
+          <label for="logDateInput">Logging for:</label>
+          <input type="date" id="logDateInput">
+        </div>
+      </div>
+
+      <!-- Flow Intensity -->
+      <div class="logger-section">
+        <div class="logger-section-title">💧 Menstrual Flow</div>
+        <div class="flow-options" id="flowGroup">
+          <button type="button" class="flow-pill active" data-flow="none">None</button>
+          <button type="button" class="flow-pill" data-flow="spotting">Spotting 🩸</button>
+          <button type="button" class="flow-pill" data-flow="light">Light 💧</button>
+          <button type="button" class="flow-pill" data-flow="medium">Medium 💧💧</button>
+          <button type="button" class="flow-pill" data-flow="heavy">Heavy 💧💧💧</button>
+        </div>
+      </div>
+
+      <!-- Moods -->
+      <div class="logger-section">
+        <div class="logger-section-title">✨ Mood & Emotions</div>
+        <div class="chip-grid" id="moodGroup">
+          <button type="button" class="chip" data-mood="Happy">😊 Happy</button>
+          <button type="button" class="chip" data-mood="Calm">😌 Calm</button>
+          <button type="button" class="chip" data-mood="Energetic">⚡ Energetic</button>
+          <button type="button" class="chip" data-mood="Sensitive">🥺 Sensitive</button>
+          <button type="button" class="chip" data-mood="Irritable">😠 Irritable</button>
+          <button type="button" class="chip" data-mood="Fatigued">😴 Fatigued</button>
+          <button type="button" class="chip" data-mood="Anxious">😰 Anxious</button>
+          <button type="button" class="chip" data-mood="Motivated">🎯 Motivated</button>
+        </div>
+      </div>
+
+      <!-- Symptoms -->
+      <div class="logger-section">
+        <div class="logger-section-title">⚡ Physical Symptoms</div>
+        <div class="chip-grid" id="symptomGroup">
+          <button type="button" class="chip symptom" data-symptom="Cramps">⚡ Cramps</button>
+          <button type="button" class="chip symptom" data-symptom="Headache">🤕 Headache</button>
+          <button type="button" class="chip symptom" data-symptom="Bloating">🎈 Bloating</button>
+          <button type="button" class="chip symptom" data-symptom="Backache">🩹 Lower Back Pain</button>
+          <button type="button" class="chip symptom" data-symptom="Acne">🧴 Skin Breakout</button>
+          <button type="button" class="chip symptom" data-symptom="Cravings">🍫 Sugar Cravings</button>
+          <button type="button" class="chip symptom" data-symptom="Tender Breasts">🌡️ Tender Breasts</button>
+          <button type="button" class="chip symptom" data-symptom="Nausea">🤢 Nausea</button>
+          <button type="button" class="chip symptom" data-symptom="Insomnia">💤 Trouble Sleeping</button>
+        </div>
+      </div>
+
+      <!-- Hydration Water Tracker -->
+      <div class="logger-section">
+        <div class="logger-section-title">💧 Daily Hydration Tracker</div>
+        <div class="water-tracker-container">
+          <div class="water-info">
+            <span class="water-icon">💧</span>
+            <div class="water-text">
+              <h4 id="waterCountText">4 of 8 glasses logged</h4>
+              <p id="waterMlText">1,000 ml / 2,000 ml daily goal</p>
+            </div>
+          </div>
+          <div class="water-cups" id="waterCupsContainer">
+            <!-- 8 cups dynamically rendered -->
+          </div>
+          <div class="water-controls">
+            <button type="button" class="btn-water-adj" id="btnWaterSub">-</button>
+            <button type="button" class="btn-water-adj" id="btnWaterAdd">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="logger-section">
+        <div class="logger-section-title">📖 Notes & Diary</div>
+        <textarea id="logNotes" class="notes-input" placeholder="How did you feel today? Any notes on sleep, food, or exercise..."></textarea>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="logger-footer">
+        <div>
+          <button type="button" id="btnSaveLog" class="btn-save-log">💾 Save Today's Log</button>
+          <span id="toastMsg" class="toast-msg">✅ Log saved successfully!</span>
+        </div>
+        <button type="button" id="btnClearLog" class="btn-clear-log">Reset Day's Log</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================
+    // STATE MANAGEMENT
+    // =========================================
+    const savedCycle = localStorage.getItem("cycle_data");
+    let cycleData = savedCycle ? JSON.parse(savedCycle) : {
+      startDate: "2026-11-13",
+      cycleLength: 28,
+      periodLength: 5
+    };
+
+    // Daily symptoms logs stored as { "YYYY-MM-DD": { flow, moods, symptoms, waterGlasses, notes } }
+    const savedLogs = localStorage.getItem("cycle_daily_logs");
+    let dailyLogs = savedLogs ? JSON.parse(savedLogs) : {};
+
+    let viewYear = 2026;
+    let viewMonth = 10; // November (0-indexed)
+    let selectedDateStr = new Date().toISOString().split("T")[0];
+
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    // =========================================
+    // PHASE INSIGHTS DATABASE
+    // =========================================
+    const phaseKnowledge = {
+      menstrual: {
+        title: "🩸 Menstrual Phase (Days 1–5)",
+        banner: "<strong>Menstrual Phase (Days 1–5):</strong> Estrogen and progesterone are at their lowest levels. Your body is shedding the uterine lining and asks for gentle restoration, warmth, and rest.",
+        nutrition: "Warm, iron-rich meals like lentils, spinach, bone broths, and dark chocolate. Drink soothing ginger or raspberry leaf tea for cramps.",
+        movement: "Restorative yoga, gentle pelvic stretching, or relaxing walks. Avoid strenuous lifting or exhaustion.",
+        selfcare: "Keep your lower abdomen warm with a hot water bag, get 8+ hours of deep sleep, and embrace low-pressure quiet time.",
+        hormone: "Hormone levels are at baseline; physical energy is lowest, but your intuitive clarity and reflection are at their peak."
+      },
+      follicular: {
+        title: "🌱 Follicular Phase (Days 6–13)",
+        banner: "<strong>Follicular Phase (Days 6–13):</strong> Estrogen begins its climb as follicles mature. You will feel an uptick in optimism, stamina, mental sharpness, and creativity.",
+        nutrition: "Fresh vibrant salads, lean proteins, fermented foods (yogurt, kimchi), and pumpkin or flax seeds for healthy hormone synthesis.",
+        movement: "Cardio, brisk running, hiking, and strength conditioning. Your muscles recover faster during this phase!",
+        selfcare: "Great time to start new habits, brainstorm exciting projects, organize your space, and connect with friends.",
+        hormone: "Rising estrogen boosts serotonin and dopamine, giving you brighter skin, high stamina, and positive mood."
+      },
+      ovulation: {
+        title: "✨ Ovulatory Phase (Days 14–16)",
+        banner: "<strong>Ovulatory Phase (Days 14–16):</strong> Peak estrogen and LH surge trigger the release of an egg. Fertility, confidence, verbal fluency, and magnetism are at their maximum.",
+        nutrition: "Antioxidant-rich berries, leafy cruciferous veggies, hydrating foods (cucumbers, watermelon), and fiber to help metabolize estrogen.",
+        movement: "High-intensity interval training (HIIT), heavy lifting, spin class, or dance workouts. You have maximum peak power.",
+        selfcare: "Schedule important meetings, social gatherings, presentations, or romantic date nights. Your confidence shines brightest now.",
+        hormone: "Estrogen and testosterone hit their monthly peak. High energy, heightened libido, and radiant complexion."
+      },
+      luteal: {
+        title: "🌙 Luteal Phase (Days 17–28)",
+        banner: "<strong>Luteal Phase (Days 17–28):</strong> Progesterone takes over to support the uterine lining. As progesterone drops towards the end, PMS symptoms and cravings can emerge.",
+        nutrition: "Complex carbs (roasted sweet potatoes, oats, quinoa), magnesium (almonds, pumpkin seeds), and avoid excess sodium or caffeine to curb bloating.",
+        movement: "Moderate pilates, bodyweight sculpt, swimming, or moderate cycling. Listen to your fatigue cues.",
+        selfcare: "Set gentle boundaries, minimize overcommitting, keep a bedtime ritual, and practice mindfulness to balance mood swings.",
+        hormone: "Progesterone promotes calm initially, but its sharp drop before menstruation triggers PMS, bloating, and sugar cravings."
+      }
+    };
+
+    // =========================================
+    // CORE PREDICTIONS
+    // =========================================
+    function getPredictions() {
+      const start = new Date(cycleData.startDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      start.setHours(0, 0, 0, 0);
+
+      const diffDays = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+      const cycleDay = diffDays >= 0 ? diffDays + 1 : 1;
+
+      // Next Period = Start Date + cycleLength
+      const nextP = new Date(start);
+      nextP.setDate(nextP.getDate() + Number(cycleData.cycleLength));
+
+      // Ovulation = Next Period - 14 days
+      const ovul = new Date(nextP);
+      ovul.setDate(ovul.getDate() - 14);
+
+      // Fertile Window = Ovulation - 5 days
+      const fert = new Date(ovul);
+      fert.setDate(fert.getDate() - 5);
+
+      const daysLeft = Math.round((nextP - today) / (1000 * 60 * 60 * 24));
+      const toYMD = (d) => {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${y}-${m}-${day}`;
+      };
+
+      // Determine current cycle phase
+      let currentPhaseKey = "menstrual";
+      const pLen = Number(cycleData.periodLength) || 5;
+      const cLen = Number(cycleData.cycleLength) || 28;
+      const ovDayNum = cLen - 14;
+
+      if (cycleDay <= pLen) {
+        currentPhaseKey = "menstrual";
+      } else if (cycleDay < ovDayNum - 1) {
+        currentPhaseKey = "follicular";
+      } else if (cycleDay >= ovDayNum - 1 && cycleDay <= ovDayNum + 2) {
+        currentPhaseKey = "ovulation";
+      } else {
+        currentPhaseKey = "luteal";
+      }
+
+      return {
+        cycleDay,
+        daysLeft,
+        nextPeriod: toYMD(nextP),
+        ovulation: toYMD(ovul),
+        fertileStart: toYMD(fert),
+        fertileEnd: toYMD(ovul),
+        currentPhaseKey,
+      };
+    }
+
+    // =========================================
+    // UI UPDATES
+    // =========================================
+    function updateUI() {
+      const pred = getPredictions();
+
+      document.getElementById("cycleDay").innerText = pred.cycleDay;
+      document.getElementById("cycleBadge").innerText = `Cycle Day ${pred.cycleDay}`;
+      document.getElementById("countdown").innerText = pred.daysLeft > 0 
+        ? `Period in ${pred.daysLeft} days` 
+        : (pred.daysLeft === 0 ? "Period due today!" : `Period was ${Math.abs(pred.daysLeft)} days ago`);
+
+      document.getElementById("nextPeriod").innerText = pred.nextPeriod;
+      document.getElementById("ovulation").innerText = pred.ovulation;
+      document.getElementById("fertileWindow").innerText = `${pred.fertileStart.slice(5)} to ${pred.fertileEnd.slice(5)}`;
+      document.getElementById("cycleLenText").innerText = `${cycleData.cycleLength} Days`;
+
+      document.getElementById("inputStart").value = cycleData.startDate;
+      document.getElementById("inputCycle").value = cycleData.cycleLength;
+      document.getElementById("inputPeriod").value = cycleData.periodLength;
+
+      // Update Phase Badge
+      const phaseLabels = {
+        menstrual: "🩸 Menstrual Phase",
+        follicular: "🌱 Follicular Phase",
+        ovulation: "✨ Ovulation Phase",
+        luteal: "🌙 Luteal Phase"
+      };
+      document.getElementById("currentPhaseTag").innerText = `Current: ${phaseLabels[pred.currentPhaseKey]} (Day ${pred.cycleDay})`;
+      setPhaseTab(pred.currentPhaseKey);
+
+      renderCalendar(pred);
+      loadLogForDate(selectedDateStr);
+    }
+
+    // =========================================
+    // PHASE TABS INTERACTION
+    // =========================================
+    function setPhaseTab(phaseKey) {
+      document.querySelectorAll(".phase-tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.phase === phaseKey);
+      });
+
+      const p = phaseKnowledge[phaseKey] || phaseKnowledge.menstrual;
+      document.getElementById("phaseBanner").innerHTML = p.banner;
+      document.getElementById("insightNutrition").innerText = p.nutrition;
+      document.getElementById("insightMovement").innerText = p.movement;
+      document.getElementById("insightSelfcare").innerText = p.selfcare;
+      document.getElementById("insightHormone").innerText = p.hormone;
+    }
+
+    document.querySelectorAll(".phase-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setPhaseTab(btn.dataset.phase);
+      });
+    });
+
+    // =========================================
+    // CALENDAR RENDERING
+    // =========================================
+    function renderCalendar(pred) {
+      document.getElementById("monthTitle").innerText = `${monthNames[viewMonth]} ${viewYear}`;
+      const grid = document.getElementById("calendarGrid");
+      grid.innerHTML = "";
+
+      // Weekday headers
+      ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((d) => {
+        const el = document.createElement("div");
+        el.className = "weekday";
+        el.innerText = d;
+        grid.appendChild(el);
+      });
+
+      const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      const totalDays = new Date(viewYear, viewMonth + 1, 0).getDate();
+      const todayStr = new Date().toISOString().split("T")[0];
+
+      // Empty leading days
+      for (let i = 0; i < firstDay; i++) {
+        const el = document.createElement("div");
+        el.className = "cal-day empty";
+        grid.appendChild(el);
+      }
+
+      // Days of the month
+      for (let day = 1; day <= totalDays; day++) {
+        const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const el = document.createElement("div");
+        el.className = "cal-day";
+        el.innerText = day;
+        el.dataset.date = dateStr;
+
+        const start = new Date(cycleData.startDate);
+        const pEnd = new Date(start);
+        pEnd.setDate(pEnd.getDate() + Number(cycleData.periodLength) - 1);
+
+        const nextP = new Date(pred.nextPeriod);
+        const nextPEnd = new Date(nextP);
+        nextPEnd.setDate(nextPEnd.getDate() + Number(cycleData.periodLength) - 1);
+
+        const curr = new Date(dateStr);
+
+        if (curr >= start && curr <= pEnd) el.classList.add("period");
+        else if (curr >= nextP && curr <= nextPEnd) el.classList.add("predicted");
+        else if (dateStr === pred.ovulation) el.classList.add("ovulation");
+        else if (dateStr >= pred.fertileStart && dateStr <= pred.fertileEnd) el.classList.add("fertile");
+
+        if (dateStr === todayStr) el.classList.add("today");
+        if (dateStr === selectedDateStr) el.classList.add("selected");
+
+        // Check if there is a log for this date
+        if (dailyLogs[dateStr] && (
+          (dailyLogs[dateStr].moods && dailyLogs[dateStr].moods.length > 0) ||
+          (dailyLogs[dateStr].symptoms && dailyLogs[dateStr].symptoms.length > 0) ||
+          (dailyLogs[dateStr].flow && dailyLogs[dateStr].flow !== "none") ||
+          (dailyLogs[dateStr].waterGlasses > 0)
+        )) {
+          const dot = document.createElement("span");
+          dot.className = "cal-day-dot";
+          el.appendChild(dot);
+        }
+
+        // Clicking a day opens that day in the logger!
+        el.addEventListener("click", () => {
+          selectedDateStr = dateStr;
+          document.getElementById("logDateInput").value = dateStr;
+          document.querySelectorAll(".cal-day").forEach(d => d.classList.remove("selected"));
+          el.classList.add("selected");
+          loadLogForDate(dateStr);
+        });
+
+        grid.appendChild(el);
+      }
+    }
+
+    // =========================================
+    // SYMPTOM & MOOD LOGGER LOGIC
+    // =========================================
+    let currentLog = {
+      flow: "none",
+      moods: [],
+      symptoms: [],
+      waterGlasses: 4,
+      notes: ""
+    };
+
+    function renderWaterTracker(glasses) {
+      const container = document.getElementById("waterCupsContainer");
+      container.innerHTML = "";
+      for (let i = 1; i <= 8; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `cup-btn ${i <= glasses ? "filled" : ""}`;
+        btn.innerText = "💧";
+        btn.title = `Glass ${i}`;
+        btn.addEventListener("click", () => {
+          currentLog.waterGlasses = i;
+          renderWaterTracker(i);
+        });
+        container.appendChild(btn);
+      }
+
+      document.getElementById("waterCountText").innerText = `${glasses} of 8 glasses logged`;
+      document.getElementById("waterMlText").innerText = `${glasses * 250} ml / 2,000 ml daily goal`;
+    }
+
+    function loadLogForDate(dateStr) {
+      const log = dailyLogs[dateStr] || {
+        flow: "none",
+        moods: [],
+        symptoms: [],
+        waterGlasses: 4,
+        notes: ""
+      };
+
+      currentLog = { ...log };
+
+      // Update Date picker input
+      document.getElementById("logDateInput").value = dateStr;
+
+      // Flow Pills
+      document.querySelectorAll(".flow-pill").forEach(pill => {
+        pill.classList.toggle("active", pill.dataset.flow === (currentLog.flow || "none"));
+      });
+
+      // Mood chips
+      document.querySelectorAll("#moodGroup .chip").forEach(chip => {
+        chip.classList.toggle("active", (currentLog.moods || []).includes(chip.dataset.mood));
+      });
+
+      // Symptom chips
+      document.querySelectorAll("#symptomGroup .chip").forEach(chip => {
+        chip.classList.toggle("active", (currentLog.symptoms || []).includes(chip.dataset.symptom));
+      });
+
+      // Water Tracker
+      renderWaterTracker(currentLog.waterGlasses !== undefined ? currentLog.waterGlasses : 4);
+
+      // Notes
+      document.getElementById("logNotes").value = currentLog.notes || "";
+    }
+
+    // Flow selector
+    document.querySelectorAll(".flow-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        document.querySelectorAll(".flow-pill").forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        currentLog.flow = pill.dataset.flow;
+      });
+    });
+
+    // Mood multi-select chips
+    document.querySelectorAll("#moodGroup .chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        chip.classList.toggle("active");
+        const mood = chip.dataset.mood;
+        if (!currentLog.moods) currentLog.moods = [];
+        if (chip.classList.contains("active")) {
+          if (!currentLog.moods.includes(mood)) currentLog.moods.push(mood);
+        } else {
+          currentLog.moods = currentLog.moods.filter(m => m !== mood);
+        }
+      });
+    });
+
+    // Symptom multi-select chips
+    document.querySelectorAll("#symptomGroup .chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        chip.classList.toggle("active");
+        const symptom = chip.dataset.symptom;
+        if (!currentLog.symptoms) currentLog.symptoms = [];
+        if (chip.classList.contains("active")) {
+          if (!currentLog.symptoms.includes(symptom)) currentLog.symptoms.push(symptom);
+        } else {
+          currentLog.symptoms = currentLog.symptoms.filter(s => s !== symptom);
+        }
+      });
+    });
+
+    // Water controls (+ / -)
+    document.getElementById("btnWaterAdd").addEventListener("click", () => {
+      if ((currentLog.waterGlasses || 0) < 8) {
+        currentLog.waterGlasses = (currentLog.waterGlasses || 0) + 1;
+        renderWaterTracker(currentLog.waterGlasses);
+      }
+    });
+
+    document.getElementById("btnWaterSub").addEventListener("click", () => {
+      if ((currentLog.waterGlasses || 0) > 0) {
+        currentLog.waterGlasses = (currentLog.waterGlasses || 0) - 1;
+        renderWaterTracker(currentLog.waterGlasses);
+      }
+    });
+
+    // Date picker change
+    document.getElementById("logDateInput").addEventListener("change", (e) => {
+      selectedDateStr = e.target.value;
+      loadLogForDate(selectedDateStr);
+      renderCalendar(getPredictions());
+    });
+
+    // Save Daily Log
+    document.getElementById("btnSaveLog").addEventListener("click", () => {
+      currentLog.notes = document.getElementById("logNotes").value.trim();
+      dailyLogs[selectedDateStr] = { ...currentLog };
+      localStorage.setItem("cycle_daily_logs", JSON.stringify(dailyLogs));
+
+      const toast = document.getElementById("toastMsg");
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2500);
+
+      renderCalendar(getPredictions());
+    });
+
+    // Clear / Reset Day's Log
+    document.getElementById("btnClearLog").addEventListener("click", () => {
+      if (confirm(`Reset the log for ${selectedDateStr}?`)) {
+        delete dailyLogs[selectedDateStr];
+        localStorage.setItem("cycle_daily_logs", JSON.stringify(dailyLogs));
+        loadLogForDate(selectedDateStr);
+        renderCalendar(getPredictions());
+      }
+    });
+
+    // Form submission
+    document.getElementById("cycleForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      cycleData.startDate = document.getElementById("inputStart").value;
+      cycleData.cycleLength = Number(document.getElementById("inputCycle").value);
+      cycleData.periodLength = Number(document.getElementById("inputPeriod").value);
+      localStorage.setItem("cycle_data", JSON.stringify(cycleData));
+      updateUI();
+    });
+
+    // Quick Period Start
+    document.getElementById("btnToday").addEventListener("click", () => {
+      const todayStr = new Date().toISOString().split("T")[0];
+      cycleData.startDate = todayStr;
+      localStorage.setItem("cycle_data", JSON.stringify(cycleData));
+      selectedDateStr = todayStr;
+      updateUI();
+    });
+
+    // Month Navigation
+    document.getElementById("btnPrev").addEventListener("click", () => {
+      viewMonth--;
+      if (viewMonth < 0) {
+        viewMonth = 11;
+        viewYear--;
+      }
+      renderCalendar(getPredictions());
+    });
+
+    document.getElementById("btnNext").addEventListener("click", () => {
+      viewMonth++;
+      if (viewMonth > 11) {
+        viewMonth = 0;
+        viewYear++;
+      }
+      renderCalendar(getPredictions());
+    });
+
+    // Initial render
+    document.getElementById("logDateInput").value = selectedDateStr;
+    updateUI();
+  </script>
+</body>
+</html>
